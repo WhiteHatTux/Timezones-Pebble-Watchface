@@ -1,0 +1,37 @@
+{
+    "appKeys": {
+        "KEY_LOCATION_NAME": 1,
+        "KEY_TEMPERATURE": 0
+    },
+    "capabilities": [
+        "location"
+    ],
+    "companyName": "WhiteHatTux",
+    "longName": "Watchface with two timezones",
+    "projectType": "native",
+    "resources": {
+        "media": [
+            {
+                "file": "fonts/SketchRockwell-Bold.ttf",
+                "name": "FONT_SKETCHROCKWELL_30",
+                "type": "font"
+            },
+            {
+                "file": "fonts/SketchRockwell-Bold.ttf",
+                "name": "FONT_SKETCHROCKWELL_42",
+                "type": "font"
+            }
+        ]
+    },
+    "sdkVersion": "3",
+    "shortName": "Two Timezones",
+    "targetPlatforms": [
+        "aplite",
+        "basalt"
+    ],
+    "uuid": "59cdea8a-a2fa-4c38-9d20-b1fb2c6d5799",
+    "versionLabel": "1.0",
+    "watchapp": {
+        "watchface": true
+    }
+}
