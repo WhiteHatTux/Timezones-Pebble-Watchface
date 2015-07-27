@@ -8,6 +8,8 @@ static TextLayer *s_time_layer;
 static TextLayer *s_date_layer;
 static TextLayer *s_other_time_layer;
 static TextLayer *s_weather_layer;
+static TextLayer *s_bluetooth_layer;
+static TextLayer *s_battery_layer;
 static Layer *s_canvas_layer;
 
 static GFont s_time_font;
@@ -77,14 +79,44 @@ static void update_proc(Layer *s_canvas_layer, GContext *ctx) {
   graphics_context_set_stroke_color(ctx, GColorBlack);
   graphics_draw_line(ctx, p0, p1);
 }
+
+void bt_handler(bool connected) {
+  if (connected) {
+    text_layer_set_text(s_bluetooth_layer, "");
+  } else {
+    text_layer_set_text(s_bluetooth_layer, "-");
+  }  
+}
+
+static void battery_handler(BatteryChargeState new_state) {
+  // Write to buffer and display
+  if (new_state.charge_percent < 30) {
+    text_layer_set_text(s_battery_layer, "-");
+  } else {
+    text_layer_set_text(s_battery_layer, "");
+  }
+}
+
 static void main_window_load(Window *window) {
   // Create GFonts
   s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_SKETCHROCKWELL_30));
   s_time_font_big = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_SKETCHROCKWELL_42));
   
   
+  //Add bluetooth notification
+  s_bluetooth_layer = text_layer_create(GRect(0, 0, 20, 35));
+  text_layer_set_background_color(s_bluetooth_layer, GColorBlack);
+  text_layer_set_text_color(s_bluetooth_layer, GColorWhite);
+  
+  text_layer_set_font(s_bluetooth_layer, fonts_get_system_font(FONT_KEY_ROBOTO_CONDENSED_21));
+  text_layer_set_text_alignment(s_bluetooth_layer, GTextAlignmentCenter);
+  
+  layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_bluetooth_layer));
+  text_layer_set_text(s_bluetooth_layer, "");
+    
+  
   // Add second timezone
-  s_other_time_layer = text_layer_create(GRect(0, 0, 144, 35));
+  s_other_time_layer = text_layer_create(GRect(20, 0, 104, 35));
   text_layer_set_background_color(s_other_time_layer, GColorBlack);
   text_layer_set_text_color(s_other_time_layer, GColorWhite);
   
@@ -92,6 +124,18 @@ static void main_window_load(Window *window) {
   text_layer_set_text_alignment(s_other_time_layer, GTextAlignmentCenter);
   
   layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_other_time_layer));
+  
+    
+  //Add battery notification
+  s_battery_layer = text_layer_create(GRect(124, 0, 20, 35));
+  text_layer_set_background_color(s_battery_layer, GColorBlack);
+  text_layer_set_text_color(s_battery_layer, GColorWhite);
+  
+  text_layer_set_font(s_battery_layer, fonts_get_system_font(FONT_KEY_ROBOTO_CONDENSED_21));
+  text_layer_set_text_alignment(s_battery_layer, GTextAlignmentCenter);
+  
+  layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_battery_layer));
+  text_layer_set_text(s_battery_layer, "");
   
   
   // Draw line on a special Layer
@@ -135,6 +179,11 @@ static void main_window_load(Window *window) {
   text_layer_set_text(s_weather_layer, "Loading...");
   layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_weather_layer));
   
+  // Get the current battery level
+  battery_handler(battery_state_service_peek());
+  
+  // Show current connection state
+  bt_handler(bluetooth_connection_service_peek());
 }
 
 static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
@@ -201,6 +250,8 @@ static void main_window_unload(Window *window) {
   text_layer_destroy(s_time_layer);
   text_layer_destroy(s_other_time_layer);
   text_layer_destroy(s_weather_layer);
+  text_layer_destroy(s_bluetooth_layer);
+  text_layer_destroy(s_battery_layer);
   // Unload GFont
   fonts_unload_custom_font(s_time_font);
   fonts_unload_custom_font(s_time_font_big);
@@ -221,6 +272,12 @@ static void  init(){
   
   // Register with TickTimerService
   tick_timer_service_subscribe(MINUTE_UNIT, tick_handler);
+  
+  // Register with Bluetooth events
+  bluetooth_connection_service_subscribe(bt_handler);
+  
+  // Register to the Battery State Service
+  battery_state_service_subscribe(battery_handler);
   
   // Make sure the time is displayed from the start
   update_time();
