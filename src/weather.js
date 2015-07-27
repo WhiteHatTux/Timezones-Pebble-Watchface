@@ -17,14 +17,11 @@ function locationSuccess(pos) {
     function(responseText) {
       // responseText contains a JSON object with weather info
       var json = JSON.parse(responseText);
-      console.log(JSON.parse(responseText));
       
       // Temperature in Kelvin requires adjustment
       var temperature = Math.round(json.main.temp - 273.15);
-      console.log('Temperature is ' + temperature);
       
       var locationName = json.name;
-      console.log('locationName is ' + locationName);
       
       // Assemble dictionary using our keys
       var dictionary = {
