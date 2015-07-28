@@ -49,9 +49,6 @@ static void update_time() {
   
   struct tm *tick_other_time = gmtime(&temp);
 
-  // Create a long-lived buffer
-  static char other_buffer[] = "00:00";
-
   // Write the current hours and minutes into the buffer
   if(clock_is_24h_style() == true) {
     // Use 24 hour format
@@ -222,6 +219,7 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
     case KEY_LOCATION_NAME:
       snprintf(location_buffer, sizeof(location_buffer), "%s", t->value->cstring);
       
+      break;
     default:
       APP_LOG(APP_LOG_LEVEL_ERROR, "Key %d not recognized!", (int)t->key);
       break;
