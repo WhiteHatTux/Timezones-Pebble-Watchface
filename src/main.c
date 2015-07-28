@@ -85,6 +85,7 @@ void bt_handler(bool connected) {
     text_layer_set_text(s_bluetooth_layer, "");
   } else {
     text_layer_set_text(s_bluetooth_layer, "-");
+    vibes_double_pulse();
   }  
 }
 
