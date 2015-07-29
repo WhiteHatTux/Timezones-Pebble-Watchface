@@ -16,17 +16,32 @@ static GFont s_time_font;
 static GFont s_time_font_big;
 
 static char s_utctime_string[] = "00:00   ";
-static int timezone_neg_offset = 5;
+//This offset will be calculated from UTC and not taking into account daylight savings time
+static int timezone_offset = -5; 
 static char s_localdate_string[16];
 
 
 int get_new_hour(int tm_hour){
   int new_hour;
-  if ( tm_hour < timezone_neg_offset ) {
-    int hours_for_yest = timezone_neg_offset - tm_hour;
-    new_hour = 24- hours_for_yest;
+  
+  // If offset is positive
+  if (timezone_offset > 0) {
+    // If offset will change time to the next day
+    if ((tm_hour + timezone_offset) > 23) {
+      int hours_for_tomo = (tm_hour + timezone_offset) % 24;
+      new_hour = hours_for_tomo;
+    } else {
+      new_hour = tm_hour + timezone_offset;
+    }
+    // If offset is negative
   } else {
-    new_hour = tm_hour - timezone_neg_offset;
+    // If offset will change time to yesterday
+    if ((tm_hour + timezone_offset) < 0 ) {
+      int hours_for_yest = tm_hour + timezone_offset;
+      new_hour = 24 + hours_for_yest;
+    } else {
+      new_hour = tm_hour + timezone_offset;
+    }
   }
   return new_hour;
 }
