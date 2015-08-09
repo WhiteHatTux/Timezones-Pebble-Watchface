@@ -103,7 +103,7 @@ void bt_handler(bool connected) {
 
 static void battery_handler(BatteryChargeState new_state) {
   // Write to buffer and display
-  if (new_state.charge_percent < 30) {
+  if (new_state.charge_percent < 20) {
     layer_set_hidden(bitmap_layer_get_layer(s_battery_layer), false);
     bitmap_layer_set_bitmap(s_battery_layer, s_battery_bitmap);
   } else {
