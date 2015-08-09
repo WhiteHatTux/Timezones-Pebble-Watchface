@@ -142,6 +142,10 @@ static void main_window_load(Window *window) {
   s_battery_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_20);
   s_battery_layer = bitmap_layer_create(GRect(124, 0, 20, 35));
   bitmap_layer_set_bitmap(s_battery_layer, s_battery_bitmap);
+  #ifdef PBL_PLATFORM_BASALT
+  bitmap_layer_set_background_color( s_battery_layer, GColorClear);
+  bitmap_layer_set_compositing_mode( s_battery_layer, GCompOpSet);
+  #endif
   layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(s_battery_layer));
 
   
