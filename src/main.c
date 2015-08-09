@@ -17,7 +17,7 @@ static GFont s_time_font_big;
 
 static char s_utctime_string[] = "00:00   ";
 //This offset will be calculated from UTC and not taking into account daylight savings time
-static int timezone_offset = -5; 
+static int timezone_offset_config = -5;
 static char s_localdate_string[16];
 
 
@@ -25,22 +25,22 @@ int get_new_hour(int tm_hour){
   int new_hour;
   
   // If offset is positive
-  if (timezone_offset > 0) {
+  if (timezone_offset_config > 0) {
     // If offset will change time to the next day
-    if ((tm_hour + timezone_offset) > 23) {
-      int hours_for_tomo = (tm_hour + timezone_offset) % 24;
+    if ((tm_hour + timezone_offset_config) > 23) {
+      int hours_for_tomo = (tm_hour + timezone_offset_config) % 24;
       new_hour = hours_for_tomo;
     } else {
-      new_hour = tm_hour + timezone_offset;
+      new_hour = tm_hour + timezone_offset_config;
     }
     // If offset is negative
   } else {
     // If offset will change time to yesterday
-    if ((tm_hour + timezone_offset) < 0 ) {
-      int hours_for_yest = tm_hour + timezone_offset;
+    if ((tm_hour + timezone_offset_config) < 0 ) {
+      int hours_for_yest = tm_hour + timezone_offset_config;
       new_hour = 24 + hours_for_yest;
     } else {
-      new_hour = tm_hour + timezone_offset;
+      new_hour = tm_hour + timezone_offset_config;
     }
   }
   return new_hour;
@@ -61,7 +61,6 @@ static void update_time() {
     // Use 12 hour format
     strftime(buffer, sizeof("00:00"), "%I:%M", tick_time);
   }
-  
   struct tm *tick_other_time = gmtime(&temp);
 
   // Write the current hours and minutes into the buffer

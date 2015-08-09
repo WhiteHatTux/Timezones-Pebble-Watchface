@@ -60,6 +60,12 @@ Pebble.addEventListener('ready',
     console.log('PebbleKit JS ready!');
     // Get the initial weather
     getWeather();
+    // Send timezone to pebble
+    if(current_watch.platform === "aplite") {
+      var timezone = new Date();
+      sendTimezoneOffsetToPebble(timezone.getTimezoneOffset());
+      app_log('timezone = ' + timezone + ' offset = ' + timezone.getTimezoneOffset());
+    }
   }
 );
 
