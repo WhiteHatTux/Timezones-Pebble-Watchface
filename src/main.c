@@ -116,18 +116,6 @@ static void main_window_load(Window *window) {
   s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_SKETCHROCKWELL_30));
   s_time_font_big = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_SKETCHROCKWELL_42));
   
-  
-  //Add bluetooth notification
-  s_bluetooth_layer = text_layer_create(GRect(0, 0, 20, 35));
-  text_layer_set_text_color(s_bluetooth_layer, GColorWhite);
-  
-  text_layer_set_font(s_bluetooth_layer, fonts_get_system_font(FONT_KEY_ROBOTO_CONDENSED_21));
-  text_layer_set_text_alignment(s_bluetooth_layer, GTextAlignmentCenter);
-  
-  layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_bluetooth_layer));
-  text_layer_set_text(s_bluetooth_layer, "");
-    
-  
   // Add second timezone
   s_other_time_layer = text_layer_create(GRect(0, 0, 144, 35));
   text_layer_set_background_color(s_other_time_layer, COLOR_FALLBACK(GColorDarkGreen, GColorBlack));
@@ -138,6 +126,16 @@ static void main_window_load(Window *window) {
   
   layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_other_time_layer));
   
+  //Add bluetooth notification
+  s_bluetooth_layer = text_layer_create(GRect(0, 0, 20, 35));
+  text_layer_set_background_color(s_bluetooth_layer, GColorClear);
+  text_layer_set_text_color(s_bluetooth_layer, GColorWhite);
+  
+  text_layer_set_font(s_bluetooth_layer, fonts_get_system_font(FONT_KEY_ROBOTO_CONDENSED_21));
+  text_layer_set_text_alignment(s_bluetooth_layer, GTextAlignmentCenter);
+  
+  layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_bluetooth_layer));
+
     
   // Add battery bitmap layer
   s_battery_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_20);
