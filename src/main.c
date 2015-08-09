@@ -8,10 +8,11 @@ static TextLayer *s_time_layer;
 static TextLayer *s_date_layer;
 static TextLayer *s_other_time_layer;
 static TextLayer *s_weather_layer;
-static TextLayer *s_bluetooth_layer;
 static Layer *s_canvas_layer;
 static BitmapLayer *s_battery_layer;
 static GBitmap *s_battery_bitmap;
+static BitmapLayer *s_bluetooth_layer;
+static GBitmap *s_bluetooth_bitmap;
 
 static GFont s_time_font;
 static GFont s_time_font_big;
@@ -94,9 +95,9 @@ static void update_proc(Layer *s_canvas_layer, GContext *ctx) {
 
 void bt_handler(bool connected) {
   if (connected) {
-    text_layer_set_text(s_bluetooth_layer, "");
+    layer_set_hidden(bitmap_layer_get_layer(s_bluetooth_layer), true);
   } else {
-    text_layer_set_text(s_bluetooth_layer, "-");
+    layer_set_hidden(bitmap_layer_get_layer(s_bluetooth_layer), false);
     vibes_double_pulse();
   }  
 }
@@ -127,15 +128,15 @@ static void main_window_load(Window *window) {
   layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_other_time_layer));
   
   //Add bluetooth notification
-  s_bluetooth_layer = text_layer_create(GRect(0, 0, 20, 35));
-  text_layer_set_background_color(s_bluetooth_layer, GColorClear);
-  text_layer_set_text_color(s_bluetooth_layer, GColorWhite);
+  s_bluetooth_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BLUETOOTH);
+  s_bluetooth_layer = bitmap_layer_create(GRect(0, 0, 20, 35));
+  bitmap_layer_set_bitmap(s_bluetooth_layer, s_bluetooth_bitmap);
+  #ifdef PBL_PLATFORM_BASALT
+  bitmap_layer_set_background_color( s_bluetooth_layer, GColorClear);
+  bitmap_layer_set_compositing_mode( s_bluetooth_layer, GCompOpSet);
+  #endif
+  layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(s_bluetooth_layer));
   
-  text_layer_set_font(s_bluetooth_layer, fonts_get_system_font(FONT_KEY_ROBOTO_CONDENSED_21));
-  text_layer_set_text_alignment(s_bluetooth_layer, GTextAlignmentCenter);
-  
-  layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_bluetooth_layer));
-
     
   // Add battery bitmap layer
   s_battery_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_20);
@@ -257,9 +258,10 @@ static void main_window_unload(Window *window) {
   text_layer_destroy(s_time_layer);
   text_layer_destroy(s_other_time_layer);
   text_layer_destroy(s_weather_layer);
-  text_layer_destroy(s_bluetooth_layer);
   gbitmap_destroy(s_battery_bitmap);
   bitmap_layer_destroy(s_battery_layer);
+  gbitmap_destroy(s_bluetooth_bitmap);
+  bitmap_layer_destroy(s_bluetooth_layer);
   // Unload GFont
   fonts_unload_custom_font(s_time_font);
   fonts_unload_custom_font(s_time_font_big);
