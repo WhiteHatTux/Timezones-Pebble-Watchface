@@ -20,7 +20,12 @@
                 "file": "fonts/SketchRockwell-Bold.ttf",
                 "name": "FONT_SKETCHROCKWELL_42",
                 "type": "font"
-            }
+            },
+	    {
+		"type": "png",
+		"name": "IMAGE_BATTERY_20",
+		"file": "images/battery_20_no_border.png"
+	    }
         ]
     },
     "sdkVersion": "3",

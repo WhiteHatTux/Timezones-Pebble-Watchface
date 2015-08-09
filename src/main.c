@@ -9,8 +9,9 @@ static TextLayer *s_date_layer;
 static TextLayer *s_other_time_layer;
 static TextLayer *s_weather_layer;
 static TextLayer *s_bluetooth_layer;
-static TextLayer *s_battery_layer;
 static Layer *s_canvas_layer;
+static BitmapLayer *s_battery_layer;
+static GBitmap *s_battery_bitmap;
 
 static GFont s_time_font;
 static GFont s_time_font_big;
@@ -103,9 +104,10 @@ void bt_handler(bool connected) {
 static void battery_handler(BatteryChargeState new_state) {
   // Write to buffer and display
   if (new_state.charge_percent < 30) {
-    text_layer_set_text(s_battery_layer, "-");
+    layer_set_hidden(bitmap_layer_get_layer(s_battery_layer), false);
+    bitmap_layer_set_bitmap(s_battery_layer, s_battery_bitmap);
   } else {
-    text_layer_set_text(s_battery_layer, "");
+    layer_set_hidden(bitmap_layer_get_layer(s_battery_layer), true);
   }
 }
 
@@ -117,7 +119,6 @@ static void main_window_load(Window *window) {
   
   //Add bluetooth notification
   s_bluetooth_layer = text_layer_create(GRect(0, 0, 20, 35));
-  text_layer_set_background_color(s_bluetooth_layer, COLOR_FALLBACK(GColorDarkGreen, GColorBlack));
   text_layer_set_text_color(s_bluetooth_layer, GColorWhite);
   
   text_layer_set_font(s_bluetooth_layer, fonts_get_system_font(FONT_KEY_ROBOTO_CONDENSED_21));
@@ -128,7 +129,7 @@ static void main_window_load(Window *window) {
     
   
   // Add second timezone
-  s_other_time_layer = text_layer_create(GRect(20, 0, 104, 35));
+  s_other_time_layer = text_layer_create(GRect(0, 0, 144, 35));
   text_layer_set_background_color(s_other_time_layer, COLOR_FALLBACK(GColorDarkGreen, GColorBlack));
   text_layer_set_text_color(s_other_time_layer, GColorWhite);
   
@@ -138,17 +139,12 @@ static void main_window_load(Window *window) {
   layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_other_time_layer));
   
     
-  //Add battery notification
-  s_battery_layer = text_layer_create(GRect(124, 0, 20, 35));
-  text_layer_set_background_color(s_battery_layer, COLOR_FALLBACK(GColorDarkGreen, GColorBlack));
-  text_layer_set_text_color(s_battery_layer, GColorWhite);
-  
-  text_layer_set_font(s_battery_layer, fonts_get_system_font(FONT_KEY_ROBOTO_CONDENSED_21));
-  text_layer_set_text_alignment(s_battery_layer, GTextAlignmentCenter);
-  
-  layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_battery_layer));
-  text_layer_set_text(s_battery_layer, "");
-  
+  // Add battery bitmap layer
+  s_battery_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_20);
+  s_battery_layer = bitmap_layer_create(GRect(124, 0, 20, 35));
+  bitmap_layer_set_bitmap(s_battery_layer, s_battery_bitmap);
+  layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(s_battery_layer));
+
   
   // Draw line on a special Layer
   s_canvas_layer = layer_create(GRect(0, 36, 144, 1));
@@ -264,7 +260,8 @@ static void main_window_unload(Window *window) {
   text_layer_destroy(s_other_time_layer);
   text_layer_destroy(s_weather_layer);
   text_layer_destroy(s_bluetooth_layer);
-  text_layer_destroy(s_battery_layer);
+  gbitmap_destroy(s_battery_bitmap);
+  bitmap_layer_destroy(s_battery_layer);
   // Unload GFont
   fonts_unload_custom_font(s_time_font);
   fonts_unload_custom_font(s_time_font_big);
