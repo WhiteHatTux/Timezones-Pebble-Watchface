@@ -117,7 +117,7 @@ static void main_window_load(Window *window) {
   
   //Add bluetooth notification
   s_bluetooth_layer = text_layer_create(GRect(0, 0, 20, 35));
-  text_layer_set_background_color(s_bluetooth_layer, GColorBlack);
+  text_layer_set_background_color(s_bluetooth_layer, COLOR_FALLBACK(GColorDarkGreen, GColorBlack));
   text_layer_set_text_color(s_bluetooth_layer, GColorWhite);
   
   text_layer_set_font(s_bluetooth_layer, fonts_get_system_font(FONT_KEY_ROBOTO_CONDENSED_21));
@@ -129,7 +129,7 @@ static void main_window_load(Window *window) {
   
   // Add second timezone
   s_other_time_layer = text_layer_create(GRect(20, 0, 104, 35));
-  text_layer_set_background_color(s_other_time_layer, GColorBlack);
+  text_layer_set_background_color(s_other_time_layer, COLOR_FALLBACK(GColorDarkGreen, GColorBlack));
   text_layer_set_text_color(s_other_time_layer, GColorWhite);
   
   text_layer_set_font(s_other_time_layer, s_time_font);
@@ -140,7 +140,7 @@ static void main_window_load(Window *window) {
     
   //Add battery notification
   s_battery_layer = text_layer_create(GRect(124, 0, 20, 35));
-  text_layer_set_background_color(s_battery_layer, GColorBlack);
+  text_layer_set_background_color(s_battery_layer, COLOR_FALLBACK(GColorDarkGreen, GColorBlack));
   text_layer_set_text_color(s_battery_layer, GColorWhite);
   
   text_layer_set_font(s_battery_layer, fonts_get_system_font(FONT_KEY_ROBOTO_CONDENSED_21));
