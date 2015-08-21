@@ -106,7 +106,6 @@ static void battery_handler(BatteryChargeState new_state) {
   // Write to buffer and display
   if (new_state.charge_percent < 20) {
     layer_set_hidden(bitmap_layer_get_layer(s_battery_layer), false);
-    bitmap_layer_set_bitmap(s_battery_layer, s_battery_bitmap);
   } else {
     layer_set_hidden(bitmap_layer_get_layer(s_battery_layer), true);
   }
@@ -260,6 +259,7 @@ static void outbox_sent_callback(DictionaryIterator *iterator, void *context) {
 
 static void main_window_unload(Window *window) {
   text_layer_destroy(s_time_layer);
+  text_layer_destroy(s_date_layer);
   text_layer_destroy(s_other_time_layer);
   text_layer_destroy(s_weather_layer);
   gbitmap_destroy(s_battery_bitmap);
