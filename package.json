@@ -1,0 +1,52 @@
+{
+    "author": "WhiteHatTux",
+    "dependencies": {},
+    "keywords": [],
+    "name": "two-timezones",
+    "pebble": {
+        "capabilities": [
+            "location"
+        ],
+        "displayName": "Watchface with two timezones",
+        "enableMultiJS": false,
+        "messageKeys": {
+            "KEY_LOCATION_NAME": 1,
+            "KEY_TEMPERATURE": 0
+        },
+        "projectType": "native",
+        "resources": {
+            "media": [
+                {
+                    "file": "images/bluetooth.png",
+                    "name": "IMAGE_BLUETOOTH",
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/battery_20_no_border.png",
+                    "name": "IMAGE_BATTERY_20",
+                    "type": "bitmap"
+                },
+                {
+                    "file": "fonts/SketchRockwell-Bold.ttf",
+                    "name": "FONT_SKETCHROCKWELL_30",
+                    "type": "font"
+                },
+                {
+                    "file": "fonts/SketchRockwell-Bold.ttf",
+                    "name": "FONT_SKETCHROCKWELL_42",
+                    "type": "font"
+                }
+            ]
+        },
+        "sdkVersion": "3",
+        "targetPlatforms": [
+            "aplite",
+            "basalt"
+        ],
+        "uuid": "59cdea8a-a2fa-4c38-9d20-b1fb2c6d5799",
+        "watchapp": {
+            "watchface": true
+        }
+    },
+    "version": "1.0.0"
+}

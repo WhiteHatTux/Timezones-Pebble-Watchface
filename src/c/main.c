@@ -19,7 +19,7 @@ static GFont s_time_font_big;
 
 static char s_utctime_string[] = "00:00   ";
 //This offset will be calculated from UTC and not taking into account daylight savings time
-static int timezone_offset_config = -5;
+static int timezone_offset_config = +1;
 static char s_localdate_string[16];
 
 
@@ -76,7 +76,7 @@ static void update_time() {
   }
   
   // Write date to s_localdate_string
-  strftime(s_localdate_string, sizeof(s_localdate_string), "%Y-%m-%d", tick_other_time);  
+  strftime(s_localdate_string, sizeof(s_localdate_string), "%Y-%m-%d", tick_time);  
   
   
   // Display this time on the TextLayer
@@ -106,6 +106,7 @@ static void battery_handler(BatteryChargeState new_state) {
   // Write to buffer and display
   if (new_state.charge_percent < 20) {
     layer_set_hidden(bitmap_layer_get_layer(s_battery_layer), false);
+    bitmap_layer_set_bitmap(s_battery_layer, s_battery_bitmap);
   } else {
     layer_set_hidden(bitmap_layer_get_layer(s_battery_layer), true);
   }
@@ -259,7 +260,6 @@ static void outbox_sent_callback(DictionaryIterator *iterator, void *context) {
 
 static void main_window_unload(Window *window) {
   text_layer_destroy(s_time_layer);
-  text_layer_destroy(s_date_layer);
   text_layer_destroy(s_other_time_layer);
   text_layer_destroy(s_weather_layer);
   gbitmap_destroy(s_battery_bitmap);
